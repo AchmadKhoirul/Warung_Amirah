@@ -37,7 +37,7 @@
                 </a>
             </li><!-- End Produk Nav -->
             <li class="nav-item">
-                <a class="nav-link <?php echo (uri_string() == 'admin/transaksi') ? "" : "collapsed" ?>" href="admin/transaksi">
+                <a class="nav-link <?php echo (uri_string() == 'admin/transaksi') ? "" : "collapsed" ?>" href="<?= base_url('admin/transaksi') ?>">
                     <i class="bi bi-list-check"></i>
                     <span>Data Transaksi</span>
                 </a>
@@ -46,11 +46,11 @@
         }
         ?>
         <li class="nav-item">
-    <a class="nav-link <?php echo (uri_string() == 'profile') ? "" : "collapsed" ?>" href="profile">
+    <a class="nav-link <?php echo (uri_string() == 'profile') ? "" : "collapsed" ?>" href="<?= base_url('profile') ?>">
         <i class="bi bi-person"></i>
-        <span>Profile</span>
+        <span><?php echo (session()->get('role') == 'admin') ? 'Profile' : 'Data Pembelian'; ?></span>
     </a>
-</li><!-- End Profile Nav -->
+</li><!-- End Profile/Data Pembelian Nav -->
     </ul>
 
 </aside><!-- End Sidebar-->

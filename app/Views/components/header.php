@@ -3,7 +3,7 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <a href="<?= base_url('/') ?>" class="logo d-flex align-items-center" style="cursor:pointer">
-                <img src="<?= base_url() ?>NiceAdmin/assets/img/logo.png" alt="">
+                <img src="<?= base_url() ?>NiceAdmin/assets/img/warung_amirah.png" alt="">
                 <span class="d-none d-lg-block">Toko Amirah</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
