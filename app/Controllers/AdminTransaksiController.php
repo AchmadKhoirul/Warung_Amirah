@@ -83,4 +83,30 @@ class AdminTransaksiController extends BaseController
         $data['tanggal_sampai'] = $tanggal_sampai;
         return view('admin/v_transaksi_print', $data);
     }
+
+    public function delete($id)
+    {
+        try {
+            // Cek apakah transaksi ada
+            $transaction = $this->transaction->find($id);
+            if (!$transaction) {
+                session()->setFlashdata('error', 'Transaksi tidak ditemukan.');
+                return redirect()->to(base_url('admin/transaksi'));
+            }
+
+            // Hapus detail transaksi terlebih dahulu
+            $this->transaction_detail->where('transaction_id', $id)->delete();
+
+            // Hapus transaksi
+            $this->transaction->delete($id);
+
+            session()->setFlashdata('success', 'Transaksi berhasil dihapus.');
+            return redirect()->to(base_url('admin/transaksi'));
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error deleting transaction: ' . $e->getMessage());
+            session()->setFlashdata('error', 'Gagal menghapus transaksi. Silakan coba lagi.');
+            return redirect()->to(base_url('admin/transaksi'));
+        }
+    }
 }

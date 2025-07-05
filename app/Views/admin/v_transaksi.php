@@ -1,6 +1,21 @@
 <?php helper('number'); ?>
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
+
+<?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php endif; ?>
+
 <h3>Data Transaksi Pembelian Customer</h3>
 <hr>
 <form class="row g-3 mb-3" method="get" action="<?= base_url('admin/transaksi') ?>" id="filterForm">
@@ -114,7 +129,7 @@
                         <?php endif; ?>
                     </td>
                     <td>
-                        <a href="<?= base_url('admin/transaksi/delete/' . $item['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data transaksi ini?');">Hapus</a>
+                        <a href="<?= base_url('admin/transaksi/delete/' . $item['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus transaksi #<?= $item['id'] ?> dari <?= $item['username'] ?>? Tindakan ini tidak dapat dibatalkan.');">Hapus</a>
                     </td>
                 </tr>
                 <!-- Detail Modal Begin -->

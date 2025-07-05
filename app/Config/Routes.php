@@ -41,7 +41,9 @@ $routes->resource('api', ['controller' => 'apiController']);
 $routes->get('register', 'RegisterController::index');
 $routes->post('register', 'RegisterController::store');
 
-$routes->get('admin/transaksi', 'AdminTransaksiController::index');
+$routes->get('admin/dashboard', 'AdminDashboardController::index', ['filter' => 'adminauth']);
+$routes->get('admin/transaksi', 'AdminTransaksiController::index', ['filter' => 'adminauth']);
+$routes->get('admin/transaksi/delete/(:num)', 'AdminTransaksiController::delete/$1', ['filter' => 'adminauth']);
 $routes->post('transaksi/update_status/(:num)', 'TransaksiController::update_status/$1');
 $routes->post('transaksi/update_status_pembayaran/(:num)', 'TransaksiController::update_status_pembayaran/$1');
 $routes->post('transaksi/upload_bukti/(:num)', 'TransaksiController::upload_bukti/$1');
