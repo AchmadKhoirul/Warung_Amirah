@@ -32,18 +32,6 @@
             <!-- Sales Card -->
             <div class="col-xxl-4 col-md-6">
                 <div class="card info-card sales-card">
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
                     <div class="card-body">
                         <h5 class="card-title">Sales <span>| <?= $currentMonth ?></span></h5>
 
@@ -64,18 +52,6 @@
             <!-- Revenue Card -->
             <div class="col-xxl-4 col-md-6">
                 <div class="card info-card revenue-card">
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
                     <div class="card-body">
                         <h5 class="card-title">Revenue <span>| <?= $currentMonth ?></span></h5>
 
@@ -96,18 +72,6 @@
             <!-- Customers Card -->
             <div class="col-xxl-4 col-xl-12">
                 <div class="card info-card customers-card">
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
                     <div class="card-body">
                         <h5 class="card-title">Customers <span>| <?= $currentMonth ?></span></h5>
 
@@ -130,98 +94,95 @@
             <div class="col-12">
                 <div class="card">
 
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
                     <div class="card-body">
-                        <h5 class="card-title">Reports <span>/6 Months</span></h5>
+                        <h5 class="card-title">Reports <span>/6 Months - Sales, Revenue & Customers</span></h5>
 
                         <!-- Line Chart -->
                         <div id="reportsChart"></div>
 
                         <script>
                             document.addEventListener("DOMContentLoaded", () => {
+                                // Data asli dari PHP
+                                const sales = [<?= implode(',', array_column($monthlySalesData, 'sales')) ?>];
+                                const revenue = [<?= implode(',', array_column($monthlySalesData, 'revenue')) ?>];
+                                const customers = [<?= implode(',', array_column($monthlySalesData, 'customers')) ?>];
+
                                 new ApexCharts(document.querySelector("#reportsChart"), {
-                                    series: [{
-                                        name: 'Sales',
-                                        data: [<?= implode(',', array_column($monthlySalesData, 'sales')) ?>]
-                                    }, {
-                                        name: 'Revenue',
-                                        data: [<?= implode(',', array_column($monthlySalesData, 'revenue')) ?>]
-                                    }],
+                                    series: [
+                                        { name: 'Sales', type: 'line', data: sales },
+                                        { name: 'Revenue', type: 'line', data: revenue },
+                                        { name: 'Customers', type: 'line', data: customers }
+                                    ],
                                     chart: {
                                         height: 350,
-                                        type: 'area',
-                                        toolbar: {
-                                            show: false
-                                        },
+                                        type: 'line',
+                                        toolbar: { show: false }
                                     },
-                                    markers: {
-                                        size: 4
-                                    },
+                                    dataLabels: { enabled: false },
+                                    stroke: { width: 3, curve: 'smooth' },
                                     colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                                    fill: {
-                                        type: "gradient",
-                                        gradient: {
-                                            shadeIntensity: 1,
-                                            opacityFrom: 0.3,
-                                            opacityTo: 0.4,
-                                            stops: [0, 90, 100]
-                                        }
-                                    },
-                                    dataLabels: {
-                                        enabled: false
-                                    },
-                                    stroke: {
-                                        curve: 'smooth',
-                                        width: 2
-                                    },
                                     xaxis: {
                                         categories: [<?= '"' . implode('","', array_column($monthlySalesData, 'month')) . '"' ?>]
                                     },
+                                    yaxis: [
+                                        { title: { text: 'Sales' }, labels: { style: { colors: '#4154f1' } } },
+                                        { opposite: true, title: { text: 'Revenue (Rp)' }, labels: { style: { colors: '#2eca6a' } } },
+                                        { opposite: true, title: { text: 'Customers' }, labels: { style: { colors: '#ff771d' } } }
+                                    ],
                                     tooltip: {
-                                        x: {
-                                            format: 'dd/MM/yy HH:mm'
-                                        },
+                                        shared: true,
+                                        intersect: false,
+                                        custom: function({series, seriesIndex, dataPointIndex, w}) {
+                                            return `
+                                                <div style='padding:8px'>
+                                                    <b>${w.globals.labels[dataPointIndex]}</b><br>
+                                                    Sales: ${sales[dataPointIndex]}<br>
+                                                    Revenue: Rp ${revenue[dataPointIndex].toLocaleString('id-ID')}<br>
+                                                    Customers: ${customers[dataPointIndex]}
+                                                </div>
+                                            `;
+                                        }
+                                    },
+                                    legend: {
+                                        position: 'top',
+                                        horizontalAlign: 'left'
                                     }
                                 }).render();
                             });
                         </script>
                         <!-- End Line Chart -->
 
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <small class="text-muted">Sales</small>
+                                    <div class="fw-bold text-primary">Total Transaksi</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <small class="text-muted">Revenue</small>
+                                    <div class="fw-bold text-success">Total Pendapatan</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <small class="text-muted">Customers</small>
+                                    <div class="fw-bold text-danger">Customer Baru</div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
             </div><!-- End Reports -->
 
-            <!-- Recent Sales -->
+            <!-- Recent Sales (NiceAdmin style) -->
             <div class="col-12">
                 <div class="card recent-sales overflow-auto">
-
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
                     <div class="card-body">
-                        <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
+                        <h5 class="card-title">Recent Sales</h5>
                         <table class="table table-borderless datatable">
                             <thead>
                                 <tr>
@@ -234,51 +195,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($recentTransactions as $index => $transaction): ?>
-                                <tr>
-                                    <th scope="row"><a href="#">#<?= $transaction['id'] ?></a></th>
-                                    <td><?= $transaction['username'] ?></td>
-                                    <td>
-                                        <?php if (isset($recentTransactionDetails[$transaction['id']])): ?>
-                                            <?php foreach ($recentTransactionDetails[$transaction['id']] as $detail): ?>
-                                                <a href="#" class="text-primary"><?= $detail['nama'] ?> (<?= $detail['jumlah'] ?>x)</a><br>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <a href="#" class="text-primary">No products</a>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>Rp <?= number_format($transaction['total_harga']) ?></td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td><?= date('d M Y', strtotime($transaction['created_at'])) ?></td>
-                                </tr>
-                                <?php endforeach; ?>
+                                <?php if (empty($recentTransactions)): ?>
+                                    <tr><td colspan="6" class="text-center">No entries found</td></tr>
+                                <?php else: ?>
+                                    <?php foreach ($recentTransactions as $index => $transaction): ?>
+                                    <tr>
+                                        <th scope="row"><a href="#">#<?= $transaction['id'] ?></a></th>
+                                        <td><?= esc($transaction['username']) ?></td>
+                                        <td>
+                                            <?php if (isset($recentTransactionDetails[$transaction['id']]) && $recentTransactionDetails[$transaction['id']]): ?>
+                                                <?php foreach ($recentTransactionDetails[$transaction['id']] as $detail): ?>
+                                                    <a href="#" class="text-primary"><?= esc($detail['nama']) ?> (<?= esc($detail['jumlah']) ?>x)</a><br>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <span class="text-muted">No products</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>Rp <?= number_format($transaction['total_harga']) ?></td>
+                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td><?= date('d M Y', strtotime($transaction['created_at'])) ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
-
                     </div>
-
                 </div>
-            </div><!-- End Recent Sales -->
+            </div>
+            <!-- End Recent Sales -->
 
-            <!-- Top Selling -->
+            <!-- Top Selling (NiceAdmin style) -->
             <div class="col-12">
                 <div class="card top-selling overflow-auto">
-
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
                     <div class="card-body pb-0">
-                        <h5 class="card-title">Top Selling <span>| Today</span></h5>
-
+                        <h5 class="card-title">Top Selling</h5>
                         <table class="table table-borderless">
                             <thead>
                                 <tr>
@@ -291,35 +241,30 @@
                             </thead>
                             <tbody>
                                 <?php if (empty($topProducts)): ?>
-                                <tr>
-                                    <td colspan="5" class="text-center">Tidak ada data produk terlaris</td>
-                                </tr>
+                                    <tr><td colspan="5" class="text-center">No entries found</td></tr>
                                 <?php else: ?>
-                                <?php foreach ($topProducts as $product): ?>
-                                <tr>
-                                    <th scope="row">
-                                        <a href="#">
-                                            <?php if (!empty($product['foto']) && file_exists(FCPATH . 'img/' . $product['foto'])): ?>
-                                                <img src="<?= base_url('img/' . $product['foto']) ?>" alt="<?= $product['nama'] ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" onerror="this.src='<?= base_url('NiceAdmin/assets/img/product-1.jpg') ?>'">
+                                    <?php foreach ($topProducts as $product): ?>
+                                    <tr>
+                                        <td>
+                                            <?php if (!empty($product['foto'])): ?>
+                                                <img src="<?= base_url('img/' . $product['foto']) ?>" alt="<?= esc($product['nama']) ?>" width="40" height="40" style="object-fit:cover; border-radius:5px;">
                                             <?php else: ?>
-                                                <img src="<?= base_url('NiceAdmin/assets/img/product-1.jpg') ?>" alt="No Image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                <img src="<?= base_url('NiceAdmin/assets/img/product-placeholder.png') ?>" alt="No Image" width="40" height="40" style="object-fit:cover; border-radius:5px;">
                                             <?php endif; ?>
-                                        </a>
-                                    </th>
-                                    <td><a href="#" class="text-primary fw-bold"><?= $product['nama'] ?></a></td>
-                                    <td>Rp <?= number_format($product['harga']) ?></td>
-                                    <td class="fw-bold"><?= $product['total_sold'] ?></td>
-                                    <td>Rp <?= number_format($product['harga'] * $product['total_sold']) ?></td>
-                                </tr>
-                                <?php endforeach; ?>
+                                        </td>
+                                        <td><?= esc($product['nama']) ?></td>
+                                        <td>Rp <?= number_format($product['harga']) ?></td>
+                                        <td><?= esc($product['total_sold']) ?></td>
+                                        <td>Rp <?= number_format($product['harga'] * $product['total_sold']) ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
                                 <?php endif; ?>
                             </tbody>
                         </table>
-
                     </div>
-
                 </div>
-            </div><!-- End Top Selling -->
+            </div>
+            <!-- End Top Selling -->
 
         </div>
     </section>

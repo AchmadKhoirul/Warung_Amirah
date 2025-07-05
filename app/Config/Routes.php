@@ -53,3 +53,5 @@ $routes->get('admin/transaksi/print', 'AdminTransaksiController::printTransaksi'
 $routes->get('admin/login', 'Admin\\AuthAdminController::login');
 $routes->post('admin/login', 'Admin\\AuthAdminController::login');
 $routes->get('admin/logout', 'Admin\\AuthAdminController::logout');
+
+$routes->get('admin/dashboard/data', 'AdminDashboardController::data');

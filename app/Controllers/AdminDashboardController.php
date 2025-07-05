@@ -21,14 +21,6 @@ class AdminDashboardController extends BaseController
             $currentMonth = date('Y-m');
             $currentYear = date('Y');
 
-            // Debug: Cek apakah ada transaksi selesai
-            $allTransactions = $this->transaction->findAll();
-            $completedTransactions = $this->transaction->where('status', '2')->findAll();
-            
-            // Log untuk debugging
-            log_message('info', 'Total transactions: ' . count($allTransactions));
-            log_message('info', 'Completed transactions: ' . count($completedTransactions));
-
             // Total penjualan (jumlah transaksi selesai)
             $totalSales = $this->transaction
                 ->where('status', '2')
@@ -72,14 +64,14 @@ class AdminDashboardController extends BaseController
                 ->findAll();
             $newCustomers = count(array_unique(array_column($newCustomersQuery, 'username')));
 
-            // Data transaksi terbaru (10 transaksi terakhir)
+            // Data transaksi terbaru (10 transaksi terakhir, status selesai)
             $recentTransactions = $this->transaction
                 ->where('status', '2')
                 ->orderBy('created_at', 'DESC')
                 ->limit(10)
                 ->findAll();
 
-            // Get product details for recent transactions (tahan error jika produk sudah dihapus)
+            // Get product details for recent transactions
             $recentTransactionDetails = [];
             foreach ($recentTransactions as $transaction) {
                 try {
@@ -90,9 +82,7 @@ class AdminDashboardController extends BaseController
                         ->findAll();
                     $recentTransactionDetails[$transaction['id']] = $details;
                 } catch (\Exception $e) {
-                    // Jika ada error, set empty array
                     $recentTransactionDetails[$transaction['id']] = [];
-                    log_message('error', 'Error getting transaction details: ' . $e->getMessage());
                 }
             }
 
@@ -115,14 +105,22 @@ class AdminDashboardController extends BaseController
                     ->getRow();
                 $revenue = $revenueResult ? $revenueResult->total_harga : 0;
 
+                $customersQuery = $this->transaction
+                    ->select('username')
+                    ->where('status', '2')
+                    ->where('DATE_FORMAT(created_at, "%Y-%m")', $month)
+                    ->findAll();
+                $customers = count(array_unique(array_column($customersQuery, 'username')));
+
                 $monthlySalesData[] = [
                     'month' => $monthName,
                     'sales' => $sales,
-                    'revenue' => $revenue
+                    'revenue' => $revenue,
+                    'customers' => $customers
                 ];
             }
 
-            // Top 5 produk terlaris (tahan error jika produk sudah dihapus)
+            // Top 5 produk terlaris
             try {
                 $topProducts = $this->transaction_detail
                     ->select('product.nama, product.harga, product.foto, SUM(transaction_detail.jumlah) as total_sold')
@@ -135,18 +133,7 @@ class AdminDashboardController extends BaseController
                     ->limit(5)
                     ->findAll();
             } catch (\Exception $e) {
-                // Jika ada error, set empty array
                 $topProducts = [];
-                log_message('error', 'Error getting top products: ' . $e->getMessage());
-            }
-
-            // Fallback data jika semua kosong
-            if (empty($recentTransactions) && empty($topProducts)) {
-                // Cek apakah ada transaksi dengan status lain
-                $anyTransactions = $this->transaction->findAll();
-                if (!empty($anyTransactions)) {
-                    log_message('info', 'Found transactions but none are completed. Statuses: ' . implode(', ', array_unique(array_column($anyTransactions, 'status'))));
-                }
             }
 
             $data = [
@@ -161,20 +148,11 @@ class AdminDashboardController extends BaseController
                 'monthlySalesData' => $monthlySalesData,
                 'topProducts' => $topProducts ?: [],
                 'currentMonth' => date('F Y'),
-                'currentYear' => $currentYear,
-                'debug' => [
-                    'total_transactions' => count($allTransactions),
-                    'completed_transactions' => count($completedTransactions),
-                    'has_data' => !empty($recentTransactions) || !empty($topProducts)
-                ]
+                'currentYear' => $currentYear
             ];
 
             return view('admin/dashboard', $data);
-
         } catch (\Exception $e) {
-            log_message('error', 'Dashboard error: ' . $e->getMessage());
-            
-            // Return empty data jika ada error
             return view('admin/dashboard', [
                 'totalSales' => 0,
                 'monthlySales' => 0,
@@ -187,12 +165,127 @@ class AdminDashboardController extends BaseController
                 'monthlySalesData' => [],
                 'topProducts' => [],
                 'currentMonth' => date('F Y'),
-                'currentYear' => date('Y'),
-                'debug' => [
-                    'error' => $e->getMessage(),
-                    'has_data' => false
-                ]
+                'currentYear' => date('Y')
             ]);
         }
+    }
+
+    // Endpoint AJAX untuk data dashboard dinamis (chart & tabel)
+    public function data()
+    {
+        $filter = $this->request->getGet('filter') ?? 'month';
+        $now = date('Y-m-d');
+        $currentMonth = date('Y-m');
+        $currentYear = date('Y');
+
+        // Filter range
+        if ($filter === 'today') {
+            $dateWhere = ['DATE(created_at)' => $now];
+            $groupFormat = '%H:00'; // per jam
+            $labelFormat = 'H:00';
+            $range = range(0, 23);
+            $labels = array_map(fn($h) => str_pad($h, 2, '0', STR_PAD_LEFT) . ':00', $range);
+        } elseif ($filter === 'year') {
+            $dateWhere = ["DATE_FORMAT(created_at, '%Y')" => $currentYear];
+            $groupFormat = '%m'; // per bulan
+            $labelFormat = 'M';
+            $range = range(1, 12);
+            $labels = array_map(fn($m) => date('M', mktime(0,0,0,$m,1)), $range);
+        } else { // default: month
+            $dateWhere = ["DATE_FORMAT(created_at, '%Y-%m')" => $currentMonth];
+            $groupFormat = '%d'; // per hari
+            $labelFormat = 'j M';
+            $days = date('t');
+            $range = range(1, $days);
+            $labels = array_map(fn($d) => $d . ' ' . date('M'), $range);
+        }
+
+        // Grafik: sales, revenue, customers per label
+        $salesData = [];
+        $revenueData = [];
+        $customersData = [];
+        foreach ($range as $i => $val) {
+            if ($filter === 'today') {
+                $start = date('Y-m-d') . ' ' . str_pad($val, 2, '0', STR_PAD_LEFT) . ':00:00';
+                $end = date('Y-m-d') . ' ' . str_pad($val, 2, '0', STR_PAD_LEFT) . ':59:59';
+                $where = [
+                    'status' => '2',
+                    'created_at >=' => $start,
+                    'created_at <=' => $end
+                ];
+            } elseif ($filter === 'year') {
+                $month = str_pad($val, 2, '0', STR_PAD_LEFT);
+                $where = [
+                    'status' => '2',
+                    "DATE_FORMAT(created_at, '%Y-%m')" => $currentYear . '-' . $month
+                ];
+            } else { // month
+                $day = str_pad($val, 2, '0', STR_PAD_LEFT);
+                $where = [
+                    'status' => '2',
+                    "DATE_FORMAT(created_at, '%Y-%m-%d')" => $currentMonth . '-' . $day
+                ];
+            }
+            // Sales
+            $sales = $this->transaction->where($where)->countAllResults();
+            // Revenue
+            $revenueResult = $this->transaction->selectSum('total_harga')->where($where)->get()->getRow();
+            $revenue = $revenueResult ? $revenueResult->total_harga : 0;
+            // Customers
+            $customersQuery = $this->transaction->select('username')->where($where)->findAll();
+            $customers = count(array_unique(array_column($customersQuery, 'username')));
+            $salesData[] = $sales;
+            $revenueData[] = $revenue;
+            $customersData[] = $customers;
+            $this->transaction->resetQuery();
+        }
+
+        // Recent Sales (10 terakhir sesuai filter)
+        $recentTransactions = $this->transaction
+            ->where('status', '2')
+            ->where($dateWhere)
+            ->orderBy('created_at', 'DESC')
+            ->limit(10)
+            ->findAll();
+        $recentTransactionDetails = [];
+        foreach ($recentTransactions as $transaction) {
+            try {
+                $details = $this->transaction_detail
+                    ->select('product.nama, transaction_detail.jumlah')
+                    ->join('product', 'transaction_detail.product_id = product.id', 'left')
+                    ->where('transaction_id', $transaction['id'])
+                    ->findAll();
+                $recentTransactionDetails[$transaction['id']] = $details;
+            } catch (\Exception $e) {
+                $recentTransactionDetails[$transaction['id']] = [];
+            }
+        }
+
+        // Top Selling (top 5 sesuai filter)
+        try {
+            $topProducts = $this->transaction_detail
+                ->select('product.nama, product.harga, product.foto, SUM(transaction_detail.jumlah) as total_sold')
+                ->join('product', 'transaction_detail.product_id = product.id', 'left')
+                ->join('transaction', 'transaction_detail.transaction_id = transaction.id')
+                ->where('transaction.status', '2')
+                ->where($dateWhere)
+                ->where('product.id IS NOT NULL')
+                ->groupBy('product.id, product.nama, product.harga, product.foto')
+                ->orderBy('total_sold', 'DESC')
+                ->limit(5)
+                ->findAll();
+        } catch (\Exception $e) {
+            $topProducts = [];
+        }
+
+        return $this->response->setJSON([
+            'labels' => $labels,
+            'sales' => $salesData,
+            'revenue' => $revenueData,
+            'customers' => $customersData,
+            'recentTransactions' => $recentTransactions,
+            'recentTransactionDetails' => $recentTransactionDetails,
+            'topProducts' => $topProducts
+        ]);
     }
 } 
