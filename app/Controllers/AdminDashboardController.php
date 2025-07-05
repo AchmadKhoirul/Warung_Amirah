@@ -23,19 +23,19 @@ class AdminDashboardController extends BaseController
 
             // Total penjualan (jumlah transaksi selesai)
             $totalSales = $this->transaction
-                ->where('status', '2')
+                ->where('status', '3')
                 ->countAllResults();
 
             // Total penjualan bulan ini
             $monthlySales = $this->transaction
-                ->where('status', '2')
+                ->where('status', '3')
                 ->where('DATE_FORMAT(created_at, "%Y-%m")', $currentMonth)
                 ->countAllResults();
 
             // Total pendapatan (revenue) dari transaksi selesai
             $revenueResult = $this->transaction
                 ->selectSum('total_harga')
-                ->where('status', '2')
+                ->where('status', '3')
                 ->get()
                 ->getRow();
             $totalRevenue = $revenueResult ? $revenueResult->total_harga : 0;
@@ -43,7 +43,7 @@ class AdminDashboardController extends BaseController
             // Total pendapatan bulan ini
             $monthlyRevenueResult = $this->transaction
                 ->selectSum('total_harga')
-                ->where('status', '2')
+                ->where('status', '3')
                 ->where('DATE_FORMAT(created_at, "%Y-%m")', $currentMonth)
                 ->get()
                 ->getRow();
@@ -52,21 +52,20 @@ class AdminDashboardController extends BaseController
             // Total customer unik yang sudah melakukan transaksi selesai
             $totalCustomersQuery = $this->transaction
                 ->select('username')
-                ->where('status', '2')
+                ->where('status', '3')
                 ->findAll();
             $totalCustomers = count(array_unique(array_column($totalCustomersQuery, 'username')));
 
             // Customer baru bulan ini
             $newCustomersQuery = $this->transaction
                 ->select('username')
-                ->where('status', '2')
+                ->where('status', '3')
                 ->where('DATE_FORMAT(created_at, "%Y-%m")', $currentMonth)
                 ->findAll();
             $newCustomers = count(array_unique(array_column($newCustomersQuery, 'username')));
 
-            // Data transaksi terbaru (10 transaksi terakhir, status selesai)
+            // Data transaksi terbaru (10 transaksi terakhir, semua status)
             $recentTransactions = $this->transaction
-                ->where('status', '2')
                 ->orderBy('created_at', 'DESC')
                 ->limit(10)
                 ->findAll();
@@ -93,13 +92,13 @@ class AdminDashboardController extends BaseController
                 $monthName = date('M Y', strtotime("-$i months"));
 
                 $sales = $this->transaction
-                    ->where('status', '2')
+                    ->where('status', '3')
                     ->where('DATE_FORMAT(created_at, "%Y-%m")', $month)
                     ->countAllResults();
 
                 $revenueResult = $this->transaction
                     ->selectSum('total_harga')
-                    ->where('status', '2')
+                    ->where('status', '3')
                     ->where('DATE_FORMAT(created_at, "%Y-%m")', $month)
                     ->get()
                     ->getRow();
@@ -107,7 +106,7 @@ class AdminDashboardController extends BaseController
 
                 $customersQuery = $this->transaction
                     ->select('username')
-                    ->where('status', '2')
+                    ->where('status', '3')
                     ->where('DATE_FORMAT(created_at, "%Y-%m")', $month)
                     ->findAll();
                 $customers = count(array_unique(array_column($customersQuery, 'username')));
@@ -126,7 +125,7 @@ class AdminDashboardController extends BaseController
                     ->select('product.nama, product.harga, product.foto, SUM(transaction_detail.jumlah) as total_sold')
                     ->join('product', 'transaction_detail.product_id = product.id', 'left')
                     ->join('transaction', 'transaction_detail.transaction_id = transaction.id')
-                    ->where('transaction.status', '2')
+                    ->where('transaction.status', '3')
                     ->where('product.id IS NOT NULL')
                     ->groupBy('product.id, product.nama, product.harga, product.foto')
                     ->orderBy('total_sold', 'DESC')
@@ -209,20 +208,20 @@ class AdminDashboardController extends BaseController
                 $start = date('Y-m-d') . ' ' . str_pad($val, 2, '0', STR_PAD_LEFT) . ':00:00';
                 $end = date('Y-m-d') . ' ' . str_pad($val, 2, '0', STR_PAD_LEFT) . ':59:59';
                 $where = [
-                    'status' => '2',
+                    'status' => '3',
                     'created_at >=' => $start,
                     'created_at <=' => $end
                 ];
             } elseif ($filter === 'year') {
                 $month = str_pad($val, 2, '0', STR_PAD_LEFT);
                 $where = [
-                    'status' => '2',
+                    'status' => '3',
                     "DATE_FORMAT(created_at, '%Y-%m')" => $currentYear . '-' . $month
                 ];
             } else { // month
                 $day = str_pad($val, 2, '0', STR_PAD_LEFT);
                 $where = [
-                    'status' => '2',
+                    'status' => '3',
                     "DATE_FORMAT(created_at, '%Y-%m-%d')" => $currentMonth . '-' . $day
                 ];
             }
@@ -242,7 +241,7 @@ class AdminDashboardController extends BaseController
 
         // Recent Sales (10 terakhir sesuai filter)
         $recentTransactions = $this->transaction
-            ->where('status', '2')
+            ->where('status', '3')
             ->where($dateWhere)
             ->orderBy('created_at', 'DESC')
             ->limit(10)
@@ -267,7 +266,7 @@ class AdminDashboardController extends BaseController
                 ->select('product.nama, product.harga, product.foto, SUM(transaction_detail.jumlah) as total_sold')
                 ->join('product', 'transaction_detail.product_id = product.id', 'left')
                 ->join('transaction', 'transaction_detail.transaction_id = transaction.id')
-                ->where('transaction.status', '2')
+                ->where('transaction.status', '3')
                 ->where($dateWhere)
                 ->where('product.id IS NOT NULL')
                 ->groupBy('product.id, product.nama, product.harga, product.foto')

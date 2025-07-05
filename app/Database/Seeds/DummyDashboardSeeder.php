@@ -20,12 +20,12 @@ class DummyDashboardSeeder extends Seeder
         $productIds = $db->table('product')->select('id')->get()->getResultArray();
         $productIds = array_column($productIds, 'id');
 
-        // Tambah transaksi selesai (status 2)
+        // Tambah transaksi selesai (status 3)
         for ($i = 1; $i <= 5; $i++) {
             $transaksi = [
                 'username' => 'user' . $i,
                 'total_harga' => rand(20000, 100000),
-                'status' => 2,
+                'status' => 3,
                 'created_at' => date('Y-m-d H:i:s', strtotime("-$i days")),
             ];
             $db->table('transaction')->insert($transaksi);

@@ -47,15 +47,41 @@
                     <span>Data Transaksi</span>
                 </a>
             </li><!-- End Data Transaksi Nav -->
+            <li class="nav-item">
+                <a class="nav-link <?php echo (uri_string() == 'login') ? "" : "collapsed" ?>" href="<?= base_url('login') ?>" onclick="return confirm('Yakin ingin ke halaman Login?')">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Login</span>
+                </a>
+            </li><!-- End Login Nav -->
+            <li class="nav-item">
+                <a class="nav-link <?php echo (uri_string() == 'register') ? "" : "collapsed" ?>" href="<?= base_url('register') ?>" onclick="return confirm('Yakin ingin ke halaman Register?')">
+                    <i class="bi bi-person-plus"></i>
+                    <span>Register</span>
+                </a>
+            </li><!-- End Register Nav -->
         <?php
         }
         ?>
+        <?php if (session()->get('role') !== 'admin') : ?>
         <li class="nav-item">
     <a class="nav-link <?php echo (uri_string() == 'profile') ? "" : "collapsed" ?>" href="<?= base_url('profile') ?>">
         <i class="bi bi-person"></i>
-        <span><?php echo (session()->get('role') == 'admin') ? 'Profile' : 'Data Pembelian'; ?></span>
+        <span>Data Pembelian</span>
     </a>
-</li><!-- End Profile/Data Pembelian Nav -->
+</li><!-- End Data Pembelian Nav -->
+        <li class="nav-item">
+            <a class="nav-link <?php echo (uri_string() == 'register') ? "" : "collapsed" ?>" href="<?= base_url('register') ?>" onclick="return confirm('Yakin ingin ke halaman Register?')">
+                <i class="bi bi-person-plus"></i>
+                <span>Register</span>
+            </a>
+        </li><!-- End Register Nav -->
+        <li class="nav-item">
+            <a class="nav-link" href="<?= base_url('login') ?>" onclick="return confirm('Yakin ingin logout?')">
+                <i class="bi bi-box-arrow-left"></i>
+                <span>Logout</span>
+            </a>
+        </li><!-- End Logout Nav -->
+        <?php endif; ?>
     </ul>
 
 </aside><!-- End Sidebar-->

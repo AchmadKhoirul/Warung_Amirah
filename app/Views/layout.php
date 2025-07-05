@@ -53,7 +53,7 @@ if(uri_string()!=""){
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Data Tables</h1>
+      <h1><?php echo ($hlm == "Home") ? "Daftar Produk Warung Amirah" : $hlm ?></h1>
       <nav>
         <ol class="breadcrumb">
            <li class="breadcrumb-item">Home</li>

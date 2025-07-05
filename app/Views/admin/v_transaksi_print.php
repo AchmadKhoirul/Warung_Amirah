@@ -26,9 +26,10 @@
         <label>Status</label>
         <select name="status">
             <option value="">Semua</option>
-            <option value="0" <?= (isset($status) && $status === '0') ? 'selected' : '' ?>>Dikemas</option>
-            <option value="1" <?= (isset($status) && $status === '1') ? 'selected' : '' ?>>Dikirim</option>
-            <option value="2" <?= (isset($status) && $status === '2') ? 'selected' : '' ?>>Selesai</option>
+            <option value="0" <?= (isset($status) && $status === '0') ? 'selected' : '' ?>>Diproses</option>
+            <option value="1" <?= (isset($status) && $status === '1') ? 'selected' : '' ?>>Dikemas</option>
+            <option value="2" <?= (isset($status) && $status === '2') ? 'selected' : '' ?>>Dikirim</option>
+            <option value="3" <?= (isset($status) && $status === '3') ? 'selected' : '' ?>>Selesai</option>
         </select>
         <label>Dari</label>
         <input type="date" name="tanggal_dari" id="tanggalDariPrint" value="<?= isset($tanggal_dari) ? htmlspecialchars($tanggal_dari) : '' ?>">
@@ -101,9 +102,10 @@
                     <td>
                         <?php
                         $statusList = [
-                            '0' => 'Dikemas',
-                            '1' => 'Dikirim',
-                            '2' => 'Selesai'
+                            '0' => 'Diproses',
+                            '1' => 'Dikemas',
+                            '2' => 'Dikirim',
+                            '3' => 'Selesai'
                         ];
                         echo $statusList[$item['status']] ?? '-';
                         ?>

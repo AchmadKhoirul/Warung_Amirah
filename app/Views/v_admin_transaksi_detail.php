@@ -14,9 +14,10 @@
         <li><b>Ongkir:</b> <?= $transaction['ongkir'] ?></li>
         <li><b>Total Harga:</b> Rp <?= number_format($transaction['total_harga'],0,',','.') ?></li>
         <li><b>Status:</b> <?php
-                if ($transaction['status'] == 0) echo 'Proses';
-                elseif ($transaction['status'] == 1) echo 'Dikirim';
-                elseif ($transaction['status'] == 2) echo 'Selesai';
+                if ($transaction['status'] == 0) echo 'Diproses';
+                elseif ($transaction['status'] == 1) echo 'Dikemas';
+                elseif ($transaction['status'] == 2) echo 'Dikirim';
+                elseif ($transaction['status'] == 3) echo 'Selesai';
                 else echo 'Unknown';
               ?></li>
         <li><b>Waktu:</b> <?= $transaction['created_at'] ?></li>

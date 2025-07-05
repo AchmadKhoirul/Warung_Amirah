@@ -265,7 +265,7 @@ public function cancel($id)
     $created = strtotime($transaksi['created_at']);
     $now = time();
     $diff = round(($now - $created) / 60, 2); // 2 desimal, lebih presisi
-    // Izinkan cancel jika status_pembayaran 'pending', 'bukti_upload', atau 'cod' dan status masih '0' (Dikemas)
+    // Izinkan cancel jika status_pembayaran 'pending', 'bukti_upload', atau 'cod' dan status masih '0' (Diproses)
     if ($diff > 1 || !in_array($transaksi['status_pembayaran'], ['pending', 'bukti_upload', 'cod']) || $transaksi['status'] != '0') {
         session()->setFlashdata('failed', 'Batas waktu cancel sudah habis atau transaksi tidak bisa dibatalkan.');
         return redirect()->back();

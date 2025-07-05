@@ -10,7 +10,7 @@
     <?php if (isset($debug['error'])): ?>
         <p class="text-danger">Error: <?= $debug['error'] ?></p>
     <?php endif; ?>
-    <p><strong>Dashboard kosong karena tidak ada transaksi dengan status '2' (Selesai)</strong></p>
+    <p><strong>Dashboard kosong karena tidak ada transaksi dengan status '3' (Selesai)</strong></p>
 </div>
 <?php endif; ?>
 
@@ -212,7 +212,19 @@
                                             <?php endif; ?>
                                         </td>
                                         <td>Rp <?= number_format($transaction['total_harga']) ?></td>
-                                        <td><span class="badge bg-success">Completed</span></td>
+                                        <td>
+                                            <?php
+                                                $statusMap = [
+                                                    0 => ['label' => 'Diproses', 'class' => 'bg-danger text-white'],
+                                                    1 => ['label' => 'Dikemas', 'class' => 'bg-warning text-dark'],
+                                                    2 => ['label' => 'Dikirim', 'class' => 'bg-primary'],
+                                                    3 => ['label' => 'Selesai', 'class' => 'bg-success'],
+                                                ];
+                                                $s = $transaction['status'];
+                                                $status = $statusMap[$s] ?? ['label' => 'Unknown', 'class' => 'bg-secondary'];
+                                            ?>
+                                            <span class="badge <?= $status['class'] ?>"><?= $status['label'] ?></span>
+                                        </td>
                                         <td><?= date('d M Y', strtotime($transaction['created_at'])) ?></td>
                                     </tr>
                                     <?php endforeach; ?>

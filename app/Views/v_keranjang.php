@@ -51,7 +51,7 @@ if (session()->getFlashData('success')) {
     <?php echo "Total = " . number_to_currency($total, 'IDR') ?>
 </div>
 
-<button type="submit" class="btn btn-primary">Perbarui Keranjang</button>
+<a href="<?php echo base_url() ?>" class="btn btn-primary">Belanja Lagi</a>
 <a class="btn btn-warning" href="<?php echo base_url() ?>keranjang/clear">Kosongkan Keranjang</a>
 <?php if (!empty($items) && $role !== 'admin') : ?>
     <a class="btn btn-success" href="<?php echo base_url() ?>checkout">Selesai Belanja</a>

@@ -30,9 +30,10 @@
             <td><?= $trx['ongkir'] ?></td>
             <td>
               <?php
-                if ($trx['status'] == 0) echo 'Proses';
-                elseif ($trx['status'] == 1) echo 'Dikirim';
-                elseif ($trx['status'] == 2) echo 'Selesai';
+                if ($trx['status'] == 0) echo 'Diproses';
+                elseif ($trx['status'] == 1) echo 'Dikemas';
+                elseif ($trx['status'] == 2) echo 'Dikirim';
+                elseif ($trx['status'] == 3) echo 'Selesai';
                 else echo 'Unknown';
               ?>
             </td>
@@ -40,9 +41,11 @@
             <td>
               <a href="<?= base_url('admin/transaksi/detail/'.$trx['id']) ?>" class="btn btn-info btn-sm">Detail</a>
               <?php if ($trx['status'] == 0): ?>
-                <a href="<?= base_url('admin/transaksi/ubahStatus/'.$trx['id'].'/1') ?>" class="btn btn-warning btn-sm">Kirim</a>
+                <a href="<?= base_url('admin/transaksi/ubahStatus/'.$trx['id'].'/1') ?>" class="btn btn-warning btn-sm">Dikemas</a>
               <?php elseif ($trx['status'] == 1): ?>
-                <a href="<?= base_url('admin/transaksi/ubahStatus/'.$trx['id'].'/2') ?>" class="btn btn-success btn-sm">Selesai</a>
+                <a href="<?= base_url('admin/transaksi/ubahStatus/'.$trx['id'].'/2') ?>" class="btn btn-primary btn-sm">Kirim</a>
+              <?php elseif ($trx['status'] == 2): ?>
+                <a href="<?= base_url('admin/transaksi/ubahStatus/'.$trx['id'].'/3') ?>" class="btn btn-success btn-sm">Selesai</a>
               <?php endif; ?>
             </td>
           </tr>

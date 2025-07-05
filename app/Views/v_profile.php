@@ -32,9 +32,10 @@ History Transaksi Pembelian <strong><?= $username ?></strong>
                         <td>
                             <?php
                             $statusList = [
-                                '0' => 'Dikemas',
-                                '1' => 'Dikirim',
-                                '2' => 'Selesai'
+                                '0' => 'Diproses',
+                                '1' => 'Dikemas',
+                                '2' => 'Dikirim',
+                                '3' => 'Selesai'
                             ];
                             $role = session()->get('role');
                             if ($role === 'admin') :
@@ -70,11 +71,26 @@ History Transaksi Pembelian <strong><?= $username ?></strong>
                                 <a href="<?= base_url('writable/uploads/' . $item['bukti_pembayaran']) ?>" target="_blank">
                                     <img src="<?= base_url('writable/uploads/' . $item['bukti_pembayaran']) ?>" alt="Bukti" style="max-width:80px;max-height:80px;object-fit:cover;cursor:pointer;" />
                                 </a>
-                                <div class="text-success small mt-1">Bukti sudah terupload</div>
-                                <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data" class="mt-2">
-                                    <input type="file" name="bukti_pembayaran" accept="image/jpeg,image/jpg" class="form-control mb-2" style="max-width:200px;display:inline-block;">
-                                    <button type="submit" class="btn btn-warning btn-sm">Ganti Bukti</button>
-                                </form>
+                                
+                                <?php if ($item['status_pembayaran'] === 'lunas') : ?>
+                                    <div class="text-success small mt-1">
+                                        <i class="bi bi-check-circle"></i> Pembayaran sudah dikonfirmasi admin
+                                    </div>
+                                <?php elseif ($item['status_pembayaran'] === 'bukti_upload_ulang') : ?>
+                                    <div class="text-warning small mt-1">
+                                        <i class="bi bi-exclamation-triangle"></i> Admin meminta bukti pembayaran ulang
+                                    </div>
+                                    <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data" class="mt-2">
+                                        <input type="file" name="bukti_pembayaran" accept="image/jpeg,image/jpg" required class="form-control mb-2" style="max-width:200px;display:inline-block;">
+                                        <button type="submit" class="btn btn-warning btn-sm">Upload Bukti Ulang</button>
+                                    </form>
+                                <?php else : ?>
+                                    <div class="text-info small mt-1">Bukti sudah terupload, menunggu konfirmasi admin</div>
+                                    <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data" class="mt-2">
+                                        <input type="file" name="bukti_pembayaran" accept="image/jpeg,image/jpg" class="form-control mb-2" style="max-width:200px;display:inline-block;">
+                                        <button type="submit" class="btn btn-warning btn-sm">Ganti Bukti</button>
+                                    </form>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data">
                                     <input type="file" name="bukti_pembayaran" accept="image/jpeg,image/jpg" required class="form-control mb-2" style="max-width:200px;display:inline-block;">

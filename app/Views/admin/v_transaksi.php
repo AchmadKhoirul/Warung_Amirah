@@ -88,6 +88,7 @@
                         $statusBayar = [
                             'pending' => 'Menunggu Pembayaran',
                             'bukti_upload' => 'Menunggu Konfirmasi Admin',
+                            'bukti_upload_ulang' => 'Admin Minta Bukti Ulang',
                             'cod' => 'COD',
                             'lunas' => 'Lunas',
                         ];
@@ -107,11 +108,12 @@
                     <td>
                         <?php
                         $statusList = [
-                            '0' => 'Dikemas',
-                            '1' => 'Dikirim',
-                            '2' => 'Selesai'
+                            '0' => 'Diproses',
+                            '1' => 'Dikemas',
+                            '2' => 'Dikirim',
+                            '3' => 'Selesai'
                         ];
-                        $canEditStatus = ($item['status_pembayaran'] === 'lunas' || $item['status_pembayaran'] === 'cod') && $item['status'] != '2';
+                        $canEditStatus = ($item['status_pembayaran'] === 'lunas' || $item['status_pembayaran'] === 'cod') && $item['status'] != '3';
                         if ($canEditStatus) : ?>
                             <form method="post" action="<?= base_url('transaksi/update_status/' . $item['id']) ?>?datatable_page=<?= isset($_POST['datatable_page']) ? htmlspecialchars($_POST['datatable_page']) : '0' ?>" class="d-inline">
                                 <select name="status" class="form-select form-select-sm d-inline w-auto">
@@ -122,7 +124,7 @@
                                 <button type="submit" class="btn btn-primary btn-sm">Update Status</button>
                             </form>
                             <span class="ms-2 small text-muted">Status: <b><?= $statusList[$item['status']] ?? '-' ?></b></span>
-                        <?php elseif ($item['status'] == '2'): ?>
+                        <?php elseif ($item['status'] == '3'): ?>
                             <span class="text-success">Transaksi selesai</span>
                         <?php else: ?>
                             <span class="text-muted">Status dapat diubah setelah pembayaran dikonfirmasi</span>
