@@ -5,7 +5,12 @@
         <?php
         if (session()->get('role') == 'admin') {
         ?>
-            <!-- Blok menu Dashboard dihapus di sini -->
+            <li class="nav-item">
+                <a class="nav-link <?php echo (uri_string() == 'admin/dashboard') ? "" : "collapsed" ?>" href="<?= base_url('admin/dashboard') ?>">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li><!-- End Dashboard Nav -->
         <?php
         }
         ?>
