@@ -16,7 +16,7 @@
         ?>
 
         <li class="nav-item">
-            <a class="nav-link <?php echo (uri_string() == '') ? "" : "collapsed" ?>" href="/">
+            <a class="nav-link <?php echo (uri_string() == 'home') ? "" : "collapsed" ?>" href="<?= base_url('home') ?>">
                 <i class="bi bi-grid"></i>
                 <span>Home</span>
             </a>
@@ -32,7 +32,7 @@
         </li><!-- End Keranjang Nav -->
         <?php endif; ?>
 
-        <?php
+                <?php
         if (session()->get('role') == 'admin') {
         ?>
             <li class="nav-item">

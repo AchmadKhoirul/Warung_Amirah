@@ -86,10 +86,10 @@ History Transaksi Pembelian <strong><?= $username ?></strong>
                                     </form>
                                 <?php else : ?>
                                     <div class="text-info small mt-1">Bukti sudah terupload, menunggu konfirmasi admin</div>
-                                    <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data" class="mt-2">
-                                        <input type="file" name="bukti_pembayaran" accept="image/jpeg,image/jpg" class="form-control mb-2" style="max-width:200px;display:inline-block;">
-                                        <button type="submit" class="btn btn-warning btn-sm">Ganti Bukti</button>
-                                    </form>
+                                <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data" class="mt-2">
+                                    <input type="file" name="bukti_pembayaran" accept="image/jpeg,image/jpg" class="form-control mb-2" style="max-width:200px;display:inline-block;">
+                                    <button type="submit" class="btn btn-warning btn-sm">Ganti Bukti</button>
+                                </form>
                                 <?php endif; ?>
                             <?php else: ?>
                                 <form method="post" action="<?= base_url('transaksi/upload_bukti/' . $item['id']) ?>" enctype="multipart/form-data">
