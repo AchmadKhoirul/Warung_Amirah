@@ -35,6 +35,9 @@
                 <option value="bank_transfer">Transfer Bank</option>
                 <option value="dana">DANA</option>
                 <option value="shopeepay">ShopeePay</option>
+                <option value="ovo">OVO</option>
+                <option value="gopay">GoPay</option>
+                <option value="linkaja">LinkAja</option>
                 <option value="cod">Bayar di Tempat (COD)</option>
             </select>
         </div>
@@ -178,13 +181,149 @@ $("#layanan").on('change', function() {
         var metode = $('#metode_pembayaran').val();
         var info = '';
         if(metode === 'bank_transfer') {
-            info = 'Silakan transfer ke rekening <b>1234567890</b> a.n. Toko Amirah (BANK ABC). Setelah transfer, upload bukti pembayaran.';
+            info = '<div class="alert alert-info">' +
+                   '<h6><i class="bi bi-bank"></i> <strong>Transfer Bank</strong></h6>' +
+                   '<p><strong>Bank BCA</strong><br>' +
+                   'No. Rekening: <strong>1234567890</strong><br>' +
+                   'Atas Nama: <strong>WARUNG AMIRAH</strong><br>' +
+                   'Cabang: <strong>Jakarta Pusat</strong></p>' +
+                   '<p><strong>Bank Mandiri</strong><br>' +
+                   'No. Rekening: <strong>0987654321</strong><br>' +
+                   'Atas Nama: <strong>WARUNG AMIRAH</strong><br>' +
+                   'Cabang: <strong>Jakarta Selatan</strong></p>' +
+                   '<p><strong>Bank BRI</strong><br>' +
+                   'No. Rekening: <strong>1122334455</strong><br>' +
+                   'Atas Nama: <strong>WARUNG AMIRAH</strong><br>' +
+                   'Cabang: <strong>Jakarta Barat</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Transfer sesuai total pembayaran ke salah satu rekening di atas</li>' +
+                   '<li>Simpan bukti transfer (screenshot atau foto)</li>' +
+                   '<li>Upload bukti transfer pada form di bawah ini</li>' +
+                   '<li>Klik "Buat Pesanan" untuk mengirim pesanan</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Pembayaran akan dikonfirmasi dalam 1x24 jam setelah bukti transfer diterima.</p>' +
+                   '</div>';
         } else if(metode === 'dana') {
-            info = 'Silakan transfer ke DANA <b>0812-3456-7890</b> a.n. Toko Amirah. Setelah transfer, upload bukti pembayaran.';
+            info = '<div class="alert alert-info">' +
+                   '<h6><i class="bi bi-phone"></i> <strong>DANA</strong></h6>' +
+                   '<p><strong>Nomor DANA:</strong> <strong>0812-3456-7890</strong><br>' +
+                   '<strong>Atas Nama:</strong> <strong>WARUNG AMIRAH</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Buka aplikasi DANA</li>' +
+                   '<li>Pilih menu "Kirim"</li>' +
+                   '<li>Masukkan nomor <strong>0812-3456-7890</strong></li>' +
+                   '<li>Masukkan nominal sesuai total pembayaran</li>' +
+                   '<li>Tambahkan catatan: "Pembayaran Warung Amirah"</li>' +
+                   '<li>Konfirmasi dan kirim pembayaran</li>' +
+                   '<li>Simpan bukti transfer (screenshot)</li>' +
+                   '<li>Upload bukti transfer pada form di bawah ini</li>' +
+                   '<li>Klik "Buat Pesanan" untuk mengirim pesanan</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Pembayaran akan dikonfirmasi dalam 1x24 jam setelah bukti transfer diterima.</p>' +
+                   '</div>';
         } else if(metode === 'shopeepay') {
-            info = 'Silakan transfer ke ShopeePay <b>0812-3456-7890</b> a.n. Toko Amirah. Setelah transfer, upload bukti pembayaran.';
+            info = '<div class="alert alert-info">' +
+                   '<h6><i class="bi bi-credit-card"></i> <strong>ShopeePay</strong></h6>' +
+                   '<p><strong>Nomor ShopeePay:</strong> <strong>0812-3456-7890</strong><br>' +
+                   '<strong>Atas Nama:</strong> <strong>WARUNG AMIRAH</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Buka aplikasi Shopee</li>' +
+                   '<li>Pilih menu "ShopeePay"</li>' +
+                   '<li>Pilih "Kirim"</li>' +
+                   '<li>Masukkan nomor <strong>0812-3456-7890</strong></li>' +
+                   '<li>Masukkan nominal sesuai total pembayaran</li>' +
+                   '<li>Tambahkan catatan: "Pembayaran Warung Amirah"</li>' +
+                   '<li>Konfirmasi dan kirim pembayaran</li>' +
+                   '<li>Simpan bukti transfer (screenshot)</li>' +
+                   '<li>Upload bukti transfer pada form di bawah ini</li>' +
+                   '<li>Klik "Buat Pesanan" untuk mengirim pesanan</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Pembayaran akan dikonfirmasi dalam 1x24 jam setelah bukti transfer diterima.</p>' +
+                   '</div>';
+        } else if(metode === 'ovo') {
+            info = '<div class="alert alert-info">' +
+                   '<h6><i class="bi bi-phone"></i> <strong>OVO</strong></h6>' +
+                   '<p><strong>Nomor OVO:</strong> <strong>0812-3456-7890</strong><br>' +
+                   '<strong>Atas Nama:</strong> <strong>WARUNG AMIRAH</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Buka aplikasi OVO</li>' +
+                   '<li>Pilih menu "Transfer"</li>' +
+                   '<li>Pilih "Transfer ke OVO"</li>' +
+                   '<li>Masukkan nomor <strong>0812-3456-7890</strong></li>' +
+                   '<li>Masukkan nominal sesuai total pembayaran</li>' +
+                   '<li>Tambahkan pesan: "Pembayaran Warung Amirah"</li>' +
+                   '<li>Konfirmasi dan kirim pembayaran</li>' +
+                   '<li>Simpan bukti transfer (screenshot)</li>' +
+                   '<li>Upload bukti transfer pada form di bawah ini</li>' +
+                   '<li>Klik "Buat Pesanan" untuk mengirim pesanan</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Pembayaran akan dikonfirmasi dalam 1x24 jam setelah bukti transfer diterima.</p>' +
+                   '</div>';
+        } else if(metode === 'gopay') {
+            info = '<div class="alert alert-info">' +
+                   '<h6><i class="bi bi-phone"></i> <strong>GoPay</strong></h6>' +
+                   '<p><strong>Nomor GoPay:</strong> <strong>0812-3456-7890</strong><br>' +
+                   '<strong>Atas Nama:</strong> <strong>WARUNG AMIRAH</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Buka aplikasi Gojek</li>' +
+                   '<li>Pilih menu "GoPay"</li>' +
+                   '<li>Pilih "Transfer"</li>' +
+                   '<li>Pilih "Transfer ke GoPay"</li>' +
+                   '<li>Masukkan nomor <strong>0812-3456-7890</strong></li>' +
+                   '<li>Masukkan nominal sesuai total pembayaran</li>' +
+                   '<li>Tambahkan catatan: "Pembayaran Warung Amirah"</li>' +
+                   '<li>Konfirmasi dan kirim pembayaran</li>' +
+                   '<li>Simpan bukti transfer (screenshot)</li>' +
+                   '<li>Upload bukti transfer pada form di bawah ini</li>' +
+                   '<li>Klik "Buat Pesanan" untuk mengirim pesanan</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Pembayaran akan dikonfirmasi dalam 1x24 jam setelah bukti transfer diterima.</p>' +
+                   '</div>';
+        } else if(metode === 'linkaja') {
+            info = '<div class="alert alert-info">' +
+                   '<h6><i class="bi bi-phone"></i> <strong>LinkAja</strong></h6>' +
+                   '<p><strong>Nomor LinkAja:</strong> <strong>0812-3456-7890</strong><br>' +
+                   '<strong>Atas Nama:</strong> <strong>WARUNG AMIRAH</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Buka aplikasi LinkAja</li>' +
+                   '<li>Pilih menu "Transfer"</li>' +
+                   '<li>Pilih "Transfer ke LinkAja"</li>' +
+                   '<li>Masukkan nomor <strong>0812-3456-7890</strong></li>' +
+                   '<li>Masukkan nominal sesuai total pembayaran</li>' +
+                   '<li>Tambahkan pesan: "Pembayaran Warung Amirah"</li>' +
+                   '<li>Konfirmasi dan kirim pembayaran</li>' +
+                   '<li>Simpan bukti transfer (screenshot)</li>' +
+                   '<li>Upload bukti transfer pada form di bawah ini</li>' +
+                   '<li>Klik "Buat Pesanan" untuk mengirim pesanan</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Pembayaran akan dikonfirmasi dalam 1x24 jam setelah bukti transfer diterima.</p>' +
+                   '</div>';
         } else if(metode === 'cod') {
-            info = '';
+            info = '<div class="alert alert-success">' +
+                   '<h6><i class="bi bi-cash-coin"></i> <strong>Bayar di Tempat (COD)</strong></h6>' +
+                   '<p><strong>Pembayaran dilakukan saat barang diterima</strong></p>' +
+                   '<hr>' +
+                   '<p><strong>Langkah Pembayaran:</strong></p>' +
+                   '<ol>' +
+                   '<li>Pesanan akan diproses setelah checkout</li>' +
+                   '<li>Barang akan dikirim ke alamat yang telah diisi</li>' +
+                   '<li>Pembayaran dilakukan saat barang diterima</li>' +
+                   '<li>Pastikan menyiapkan uang tunai sesuai total pembayaran</li>' +
+                   '</ol>' +
+                   '<p><strong>Catatan:</strong> Tidak perlu upload bukti pembayaran untuk metode COD.</p>' +
+                   '</div>';
         }
         $('#keterangan_transfer').html(info).toggle(info !== '');
     }
@@ -198,7 +337,10 @@ $("#layanan").on('change', function() {
             $('#bukti_pembayaran').prop('required', true);
         }
     }
-    $('#metode_pembayaran').on('change', toggleBuktiPembayaran);
+    $('#metode_pembayaran').on('change', function() {
+        toggleBuktiPembayaran();
+        showInstruksiPembayaran();
+    });
     toggleBuktiPembayaran(); // initial
     showInstruksiPembayaran();
     $('#metode_pembayaran').trigger('change');

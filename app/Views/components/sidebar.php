@@ -50,15 +50,10 @@
             <li class="nav-item">
                 <a class="nav-link <?php echo (uri_string() == 'login') ? "" : "collapsed" ?>" href="<?= base_url('login') ?>" onclick="return confirm('Yakin ingin ke halaman Login?')">
                     <i class="bi bi-box-arrow-in-right"></i>
-                    <span>Login</span>
+                    <span>Log Out</span>
                 </a>
             </li><!-- End Login Nav -->
-            <li class="nav-item">
-                <a class="nav-link <?php echo (uri_string() == 'register') ? "" : "collapsed" ?>" href="<?= base_url('register') ?>" onclick="return confirm('Yakin ingin ke halaman Register?')">
-                    <i class="bi bi-person-plus"></i>
-                    <span>Register</span>
-                </a>
-            </li><!-- End Register Nav -->
+
         <?php
         }
         ?>
@@ -69,16 +64,11 @@
         <span>Data Pembelian</span>
     </a>
 </li><!-- End Data Pembelian Nav -->
+
         <li class="nav-item">
-            <a class="nav-link <?php echo (uri_string() == 'register') ? "" : "collapsed" ?>" href="<?= base_url('register') ?>" onclick="return confirm('Yakin ingin ke halaman Register?')">
-                <i class="bi bi-person-plus"></i>
-                <span>Register</span>
-            </a>
-        </li><!-- End Register Nav -->
-        <li class="nav-item">
-            <a class="nav-link" href="<?= base_url('login') ?>" onclick="return confirm('Yakin ingin logout?')">
+            <a class="nav-link <?php echo (uri_string() == 'logout') ? '' : 'collapsed' ?>" href="<?= base_url('logout') ?>" onclick="return confirm('Yakin ingin logout?')">
                 <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
+                <span>Log Out</span>
             </a>
         </li><!-- End Logout Nav -->
         <?php endif; ?>

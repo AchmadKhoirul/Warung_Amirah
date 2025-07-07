@@ -77,6 +77,9 @@
                             'bank_transfer' => 'Bank Transfer',
                             'dana' => 'DANA',
                             'shopeepay' => 'ShopeePay',
+                            'ovo' => 'OVO',
+                            'gopay' => 'GoPay',
+                            'linkaja' => 'LinkAja',
                             'cod' => 'COD',
                         ];
                         $metode = strtolower($item['metode_pembayaran']);
