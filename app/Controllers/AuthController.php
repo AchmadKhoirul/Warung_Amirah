@@ -23,7 +23,7 @@ class AuthController extends BaseController
         if (session()->get('isLoggedIn') && session()->get('role') === 'admin') {
             session()->destroy();
         } elseif (session()->get('isLoggedIn')) {
-            return redirect()->to(base_url('/'));
+            return redirect()->to(base_url('home'));
         }
 
         if ($this->request->getPost()) {
@@ -46,7 +46,7 @@ class AuthController extends BaseController
                             'isLoggedIn' => TRUE
                         ]);
 
-                        return redirect()->to(base_url('/'));
+                        return redirect()->to(base_url('home'));
                     } else {
                         session()->setFlashdata('failed', 'Kombinasi Username & Password Salah');
                         return redirect()->back();
@@ -67,6 +67,6 @@ class AuthController extends BaseController
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('login');
+        return redirect()->to(base_url('/'));
     }
 }

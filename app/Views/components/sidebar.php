@@ -48,11 +48,11 @@
                 </a>
             </li><!-- End Data Transaksi Nav -->
             <li class="nav-item">
-                <a class="nav-link <?php echo (uri_string() == 'login') ? "" : "collapsed" ?>" href="<?= base_url('login') ?>" onclick="return confirm('Yakin ingin ke halaman Login?')">
-                    <i class="bi bi-box-arrow-in-right"></i>
+                <a class="nav-link <?php echo (uri_string() == 'logout') ? "" : "collapsed" ?>" href="<?= base_url('logout') ?>" onclick="return confirm('Yakin ingin logout?')">
+                    <i class="bi bi-box-arrow-left"></i>
                     <span>Log Out</span>
                 </a>
-            </li><!-- End Login Nav -->
+            </li><!-- End Logout Nav -->
 
         <?php
         }
